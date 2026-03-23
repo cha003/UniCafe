@@ -1,0 +1,183 @@
+:root {
+  --primary: #FFB800;
+  /* Yellow */
+  --primary-hover: #F59E0B;
+  /* Darker Yellow */
+  --secondary: #FACC15;
+  /* Yellow */
+  --bg-page: #F8F9FA;
+  /* Off-White */
+  --bg-card: rgba(255, 255, 255, 0.9);
+  --text-main: #1F2937;
+  /* Dark Gray */
+  --text-secondary: #4B5563;
+  /* Medium Gray */
+  --glass: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 184, 0, 0.2);
+  /* Soft Yellow Border */
+  --accent: #FEF08A;
+  /* Light Yellow Accent */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+.glass {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-premium {
+  padding: 0.75rem 1.5rem;
+  border-radius: 99px;
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+  color: white;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+  filter: brightness(1.1);
+}
+
+header {
+  height: 55px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.85) 0%, rgba(234, 88, 12, 0.85) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+nav a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+nav a:hover {
+  color: #FFB800;
+}
+
+.glass-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 8px;
+  color: var(--text-main);
+  font-size: 1rem;
+  outline: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.glass-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+.glass-input-dark {
+  color: white !important;
+}
+
+.glass-input-dark::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 0 10px rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Override browser autofill styles for glass inputs */
+.glass-input:-webkit-autofill,
+.glass-input:-webkit-autofill:hover,
+.glass-input:-webkit-autofill:focus,
+.glass-input:-webkit-autofill:active {
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+footer {
+  padding: 4rem 5% 2rem;
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.85) 0%, rgba(234, 88, 12, 0.85) 100%);
+  color: white;
+  margin-top: 50px;
+  border-top: 2px solid #FFB800;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.hero {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 5%;
+  background: radial-gradient(circle at top, rgba(239, 68, 68, 0.1) 0%, transparent 70%);
+}
+
+.hero h1 {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  color: var(--text-main);
+}
+
+.hero p {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin-bottom: 2.5rem;
+}
