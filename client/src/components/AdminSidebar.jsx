@@ -33,7 +33,6 @@ const AdminSidebar = ({ activeTab, setActiveTab }) => {
             items: [
                 { id: 'menu', name: 'Menu Items', icon: Utensils },
                 { id: 'orders', name: 'Orders & Queue', icon: ClipboardList },
-                { id: 'inventory', name: 'Inventory', icon: Package },
                 { id: 'users', name: 'User Access', icon: Users },
                 { id: 'messages', name: 'Messages', icon: MessageSquare },
             ]

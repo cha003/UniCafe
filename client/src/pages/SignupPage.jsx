@@ -17,6 +17,13 @@ const SignupPage = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+    const [passwordRequirements, setPasswordRequirements] = useState({
+        length: false,
+        uppercase: false,
+        lowercase: false,
+        number: false,
+        special: false
+    });
     const navigate = useNavigate();
 
     const handleGoogleSuccess = async (credentialResponse) => {
@@ -36,8 +43,22 @@ const SignupPage = () => {
         }
     };
 
+    const validatePassword = (pass) => {
+        setPasswordRequirements({
+            length: pass.length >= 8,
+            uppercase: /[A-Z]/.test(pass),
+            lowercase: /[a-z]/.test(pass),
+            number: /[0-9]/.test(pass),
+            special: /[^A-Za-z0-9]/.test(pass)
+        });
+    };
+
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        if (name === 'password') {
+            validatePassword(value);
+        }
     };
 
     const handleSignup = async (e) => {
@@ -46,6 +67,11 @@ const SignupPage = () => {
 
         if (formData.password !== formData.confirmPassword) {
             return setError('Passwords do not match');
+        }
+
+        const isPasswordValid = Object.values(passwordRequirements).every(req => req);
+        if (!isPasswordValid) {
+            return setError('Please meet all password requirements');
         }
 
         try {
@@ -252,6 +278,44 @@ const SignupPage = () => {
                                     {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Password Requirements Checklist */}
+                    <div style={{ 
+                        background: 'rgba(255, 255, 255, 0.05)', 
+                        padding: '1rem', 
+                        borderRadius: '12px', 
+                        marginBottom: '1.5rem',
+                        fontSize: '0.8rem',
+                        border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}>
+                        <p style={{ color: 'white', fontWeight: 600, margin: '0 0 0.5rem 0', opacity: 0.8 }}>Password Requirements:</p>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                            {[
+                                { key: 'length', text: '8+ Characters' },
+                                { key: 'uppercase', text: 'Uppercase Letter' },
+                                { key: 'lowercase', text: 'Lowercase Letter' },
+                                { key: 'number', text: 'At least one Number' },
+                                { key: 'special', text: 'Special Character' }
+                            ].map(req => (
+                                <div key={req.key} style={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '6px',
+                                    color: passwordRequirements[req.key] ? '#10b981' : '#fca5a5',
+                                    fontWeight: passwordRequirements[req.key] ? 700 : 500,
+                                    transition: 'all 0.3s ease'
+                                }}>
+                                    <div style={{ 
+                                        width: '6px', 
+                                        height: '6px', 
+                                        borderRadius: '50%', 
+                                        background: passwordRequirements[req.key] ? '#10b981' : '#fca5a5' 
+                                    }} />
+                                    {req.text}
+                                </div>
+                            ))}
                         </div>
                     </div>
 

@@ -37,6 +37,15 @@ const LoginPage = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
+
+        if (password.length < 1) {
+            return setError('Password is required');
+        }
+
+        if (password.length < 6) {
+            return setError('Password must be at least 6 characters');
+        }
+
         try {
             const response = await axios.post('/api/auth/login', {
                 studentId,

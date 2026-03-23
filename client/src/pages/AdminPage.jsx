@@ -29,6 +29,7 @@ const AdminPage = () => {
     const [orders, setOrders] = useState([]);
     const [users, setUsers] = useState([]);
     const [contactMessages, setContactMessages] = useState([]);
+    const [globalSearch, setGlobalSearch] = useState('');
     const [showUserModal, setShowUserModal] = useState(false);
     const [userFormData, setUserFormData] = useState({
         name: '',
@@ -113,12 +114,17 @@ const AdminPage = () => {
         }
     };
 
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    
     const fetchContactMessages = async () => {
+        setIsRefreshing(true);
         try {
             const response = await axios.get('/api/contact');
             setContactMessages(response.data);
         } catch (err) {
             console.error('Error fetching messages:', err);
+        } finally {
+            setTimeout(() => setIsRefreshing(false), 500); // 500ms delay for visual feedback
         }
     };
 
@@ -128,6 +134,16 @@ const AdminPage = () => {
             fetchContactMessages();
         } catch (err) {
             console.error('Error marking as read:', err);
+        }
+    };
+
+    const handleDeleteContactMessage = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this message?')) return;
+        try {
+            await axios.delete(`/api/contact/${id}`);
+            fetchContactMessages();
+        } catch (err) {
+            console.error('Error deleting message:', err);
         }
     };
 
@@ -300,12 +316,26 @@ const AdminPage = () => {
                         onClick={onClose}
                         style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1001 }}
                     />
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '90%', maxWidth: '700px', maxHeight: '90vh', overflowY: 'auto', background: 'var(--bg-page)', borderRadius: '24px', padding: '2.5rem', zIndex: 1002, border: '1px solid var(--primary)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}
+                    <div
+                        style={{ position: 'fixed', top: 0, left: '280px', right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1002, pointerEvents: 'none', padding: '20px' }}
                     >
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            style={{ 
+                                pointerEvents: 'auto',
+                                width: '100%', 
+                                maxWidth: '750px', 
+                                maxHeight: '90vh', 
+                                overflowY: 'auto', 
+                                background: 'white', 
+                                borderRadius: '24px', 
+                                padding: '2.5rem', 
+                                border: '1px solid #f1f5f9', 
+                                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)' 
+                            }}
+                        >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                             <h2 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)' }}>{title}</h2>
                             <X onClick={onClose} style={{ cursor: 'pointer', color: 'var(--text-main)' }} />
@@ -360,6 +390,7 @@ const AdminPage = () => {
                             </button>
                         </form>
                     </motion.div>
+                </div>
                 </>
             )}
         </AnimatePresence>
@@ -376,12 +407,26 @@ const AdminPage = () => {
                         onClick={onClose}
                         style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1001 }}
                     />
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '90%', maxWidth: '700px', maxHeight: '90vh', overflowY: 'auto', background: 'var(--bg-page)', borderRadius: '24px', padding: '2.5rem', zIndex: 1002, border: '1px solid var(--primary)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}
+                    <div
+                        style={{ position: 'fixed', top: 0, left: '280px', right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1002, pointerEvents: 'none', padding: '20px' }}
                     >
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            style={{ 
+                                pointerEvents: 'auto',
+                                width: '100%', 
+                                maxWidth: '750px', 
+                                maxHeight: '90vh', 
+                                overflowY: 'auto', 
+                                background: 'white', 
+                                borderRadius: '24px', 
+                                padding: '2.5rem', 
+                                border: '1px solid #f1f5f9', 
+                                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)' 
+                            }}
+                        >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                             <h2 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)' }}>{title}</h2>
                             <X onClick={onClose} style={{ cursor: 'pointer', color: 'var(--text-main)' }} />
@@ -443,6 +488,7 @@ const AdminPage = () => {
                             </button>
                         </form>
                     </motion.div>
+                </div>
                 </>
             )}
         </AnimatePresence>
@@ -459,12 +505,25 @@ const AdminPage = () => {
                         onClick={() => { setShowUserModal(false); resetForm(); }}
                         style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1001 }}
                     />
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '90%', maxWidth: '500px', background: 'var(--bg-page)', borderRadius: '24px', padding: '2.5rem', zIndex: 1002, border: '1px solid var(--primary)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}
+                    <div
+                        style={{ position: 'fixed', top: 0, left: '280px', right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1002, pointerEvents: 'none', padding: '20px' }}
                     >
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            style={{ 
+                                pointerEvents: 'auto',
+                                width: '100%', 
+                                maxWidth: '500px', 
+                                background: 'white', 
+                                borderRadius: '24px', 
+                                padding: '2.5rem', 
+                                zIndex: 1002, 
+                                border: '1px solid #f1f5f9', 
+                                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)' 
+                            }}
+                        >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                             <h2 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)' }}>Add New User</h2>
                             <X onClick={() => { setShowUserModal(false); resetForm(); }} style={{ cursor: 'pointer', color: 'var(--text-main)' }} />
@@ -497,6 +556,7 @@ const AdminPage = () => {
                             </button>
                         </form>
                     </motion.div>
+                </div>
                 </>
             )}
         </AnimatePresence>
@@ -513,7 +573,7 @@ const AdminPage = () => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px' }}>
-                {menuItems.map(item => (
+                {menuItems.filter(item => (item.name?.en?.toLowerCase() || '').includes(globalSearch.toLowerCase()) || (item.category?.toLowerCase() || '').includes(globalSearch.toLowerCase())).map(item => (
                     <div key={item._id} style={{ padding: '24px', borderRadius: '24px', display: 'flex', gap: '20px', alignItems: 'center', background: 'white', border: '1px solid #f1f5f9', boxShadow: '0 4px 15px rgba(0,0,0,0.02)' }}>
                         <div style={{ position: 'relative' }}>
                             {item.image ? (
@@ -586,7 +646,7 @@ const AdminPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {orders.map(order => (
+                        {orders.filter(order => (order._id?.toLowerCase() || '').includes(globalSearch.toLowerCase()) || (order.studentId?.toLowerCase() || '').includes(globalSearch.toLowerCase())).map(order => (
                             <tr key={order._id} style={{ background: '#f8fafc', borderBottom: '4px solid white' }}>
                                 <td style={{ padding: '20px 16px', borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px' }}>
                                     <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--primary)' }}>#{order.queuePosition}</div>
@@ -686,7 +746,7 @@ const AdminPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((user) => (
+                            {users.filter(user => (user.name?.toLowerCase() || '').includes(globalSearch.toLowerCase()) || (user.studentId?.toLowerCase() || '').includes(globalSearch.toLowerCase()) || (user.role?.toLowerCase() || '').includes(globalSearch.toLowerCase())).map((user) => (
                                 <tr key={user._id} style={{ background: '#f8fafc', borderRadius: '12px' }}>
                                     <td style={{ padding: '16px', fontWeight: 700, color: 'var(--text-main)' }}>{user.studentId}</td>
                                     <td style={{ padding: '16px' }}>{user.name}</td>
@@ -892,8 +952,8 @@ const AdminPage = () => {
                             </span>
                         )}
                     </h3>
-                    <button onClick={fetchContactMessages} className="glass" style={{ padding: '10px 20px', borderRadius: '12px', fontWeight: 600, cursor: 'pointer', color: 'var(--text-main)', border: '1px solid var(--glass-border)' }}>
-                        Refresh
+                    <button disabled={isRefreshing} onClick={fetchContactMessages} className="glass" style={{ padding: '10px 20px', borderRadius: '12px', fontWeight: 600, cursor: isRefreshing ? 'wait' : 'pointer', color: 'var(--text-main)', border: '1px solid var(--glass-border)', opacity: isRefreshing ? 0.7 : 1 }}>
+                        {isRefreshing ? 'Refreshing...' : 'Refresh'}
                     </button>
                 </div>
 
@@ -905,7 +965,7 @@ const AdminPage = () => {
                     </div>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        {contactMessages.map(msg => (
+                        {contactMessages.filter(msg => (msg.name?.toLowerCase() || '').includes(globalSearch.toLowerCase()) || (msg.email?.toLowerCase() || '').includes(globalSearch.toLowerCase()) || (msg.message?.toLowerCase() || '').includes(globalSearch.toLowerCase())).map(msg => (
                             <div key={msg._id} className="glass" style={{
                                 padding: '24px 28px',
                                 borderRadius: '20px',
@@ -935,17 +995,25 @@ const AdminPage = () => {
                                         </span>
                                     </div>
                                     <p style={{ color: 'var(--text-main)', lineHeight: 1.6, margin: '0 0 12px 0' }}>{msg.message}</p>
-                                    {!msg.isRead && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        {!msg.isRead && (
+                                            <button
+                                                onClick={() => handleMarkAsRead(msg._id)}
+                                                style={{ padding: '6px 16px', borderRadius: '8px', background: 'rgba(16,185,129,0.1)', color: '#10b981', border: '1px solid rgba(16,185,129,0.2)', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer' }}
+                                            >
+                                                ✓ Mark as Read
+                                            </button>
+                                        )}
+                                        {msg.isRead && (
+                                            <span style={{ fontSize: '0.8rem', color: '#10b981', fontWeight: 600 }}>✓ Read</span>
+                                        )}
                                         <button
-                                            onClick={() => handleMarkAsRead(msg._id)}
-                                            style={{ padding: '6px 16px', borderRadius: '8px', background: 'rgba(16,185,129,0.1)', color: '#10b981', border: '1px solid rgba(16,185,129,0.2)', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer' }}
+                                            onClick={() => handleDeleteContactMessage(msg._id)}
+                                            style={{ padding: '6px 12px', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
                                         >
-                                            ✓ Mark as Read
+                                            <Trash2 size={14} /> Delete
                                         </button>
-                                    )}
-                                    {msg.isRead && (
-                                        <span style={{ fontSize: '0.8rem', color: '#10b981', fontWeight: 600 }}>✓ Read</span>
-                                    )}
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -1369,7 +1437,7 @@ const AdminPage = () => {
                             
                             <div style={{ display: 'flex', alignItems: 'center', gap: '35px' }}>
                                 <div style={{ position: 'relative' }}>
-                                    <input type="text" placeholder="Search something here..." style={{ padding: '14px 20px 14px 45px', borderRadius: '30px', border: 'none', background: '#f8fafc', color: '#1f2937', width: '320px', fontSize: '0.95rem', outline: 'none', fontWeight: 500 }} />
+                                    <input type="text" value={globalSearch} onChange={(e) => setGlobalSearch(e.target.value)} placeholder="Search something here..." style={{ padding: '14px 20px 14px 45px', borderRadius: '30px', border: 'none', background: '#f8fafc', color: '#1f2937', width: '320px', fontSize: '0.95rem', outline: 'none', fontWeight: 500 }} />
                                     <Search size={18} style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
@@ -1405,7 +1473,6 @@ const AdminPage = () => {
                             {activeTab === 'orders' && renderOrderManager()}
                             {activeTab === 'feedback' && <FeedbackPage />}
                             {activeTab === 'users' && renderUserManager()}
-                            {activeTab === 'inventory' && renderInventoryManager()}
 
                             {/* Daily Sales Report Modal */}
                             <AnimatePresence>

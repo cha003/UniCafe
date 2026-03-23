@@ -467,6 +467,18 @@ app.put('/api/contact/:id/read', async (req, res) => {
     }
 });
 
+app.delete('/api/contact/:id', async (req, res) => {
+    try {
+        const deletedMsg = await Contact.findByIdAndDelete(req.params.id);
+        if (!deletedMsg) {
+            return res.status(404).json({ error: 'Message not found' });
+        }
+        res.json({ message: 'Message deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Basic Route
 app.get('/', (req, res) => {
     res.send('University Cafeteria API is running');

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Star,
@@ -23,6 +24,7 @@ const FeedbackPage = () => {
     const [complaintType, setComplaintType] = useState('General');
     const [isAnonymous, setIsAnonymous] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [complaintText, setComplaintText] = useState('');
 
     const emojis = [
         { icon: Heart, label: 'Love', color: '#ef4444' },
@@ -46,6 +48,22 @@ const FeedbackPage = () => {
             setRating(0);
             setQuickRating(null);
         }, 3000);
+    };
+
+    const handleComplaintSubmit = async () => {
+        if (!complaintText.trim()) return;
+        try {
+            await axios.post('/api/contact', {
+                name: isAnonymous ? 'Anonymous Student' : 'Student Feedback',
+                email: isAnonymous ? 'anonymous@unicafe.com' : 'student@unicafe.com',
+                message: complaintText,
+            });
+            setComplaintText('');
+            setSubmitted(true);
+            setTimeout(() => setSubmitted(false), 3000);
+        } catch (error) {
+            console.error('Error submitting complaint:', error);
+        }
     };
 
     return (
@@ -126,10 +144,11 @@ const FeedbackPage = () => {
 
                         <div style={{ marginBottom: '32px' }}>
                             <label style={{ display: 'block', marginBottom: '12px', fontWeight: 700, color: 'var(--text-main)' }}>Upload Photo</label>
-                            <div className="glass" style={{ height: '120px', border: '2px dashed var(--glass-border)', borderRadius: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                                <Camera size={32} style={{ marginBottom: '8px' }} />
-                                <span style={{ fontSize: '0.85rem' }}>Drag or click to share your meal photo</span>
-                            </div>
+                            <label className="glass" style={{ height: '120px', border: '2px dashed var(--glass-border)', borderRadius: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)', position: 'relative', overflow: 'hidden', margin: 0 }}>
+                                <input type="file" accept="image/*" capture="environment" onChange={(e) => console.log(e.target.files)} style={{ position: 'absolute', opacity: 0, width: '100%', height: '100%', cursor: 'pointer' }} />
+                                <Camera size={32} style={{ marginBottom: '8px', zIndex: 1 }} />
+                                <span style={{ fontSize: '0.85rem', zIndex: 1, pointerEvents: 'none' }}>Drag or click to take a photo</span>
+                            </label>
                         </div>
 
                         <button onClick={handleSubmit} className="btn-premium" style={{ width: '100%', padding: '16px' }}>
@@ -144,6 +163,8 @@ const FeedbackPage = () => {
                         </h3>
                         <textarea
                             placeholder="Share your concerns privately..."
+                            value={complaintText}
+                            onChange={(e) => setComplaintText(e.target.value)}
                             style={{ width: '100%', padding: '16px', borderRadius: '16px', background: 'white', border: '1px solid var(--glass-border)', resize: 'none', marginBottom: '16px', minHeight: '100px' }}
                         />
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -156,7 +177,7 @@ const FeedbackPage = () => {
                                 />
                                 Remain Anonymous
                             </label>
-                            <button className="glass" style={{ padding: '8px 20px', borderRadius: '12px', color: '#ef4444', border: '1px solid #ef444433', fontWeight: 600 }}>Send</button>
+                            <button onClick={handleComplaintSubmit} className="glass" style={{ padding: '8px 20px', borderRadius: '12px', color: '#ef4444', border: '1px solid #ef444433', fontWeight: 600 }}>Send</button>
                         </div>
                     </div>
                 </div>
